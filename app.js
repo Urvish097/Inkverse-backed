@@ -7,7 +7,7 @@ const { errorMiddleware } = require("./middleware/errorHandler");
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://inkverse-nu.vercel.app/",
   methods: "GET,POST,PUT,DELETE,PATCH",
   allowedHeaders: "Content-Type,Authorization",
   credentials: true,
