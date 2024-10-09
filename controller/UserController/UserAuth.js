@@ -105,3 +105,80 @@ exports.postlogin = async (req, res, next) => {
         return next(new ErrorHandler(error, StatusCodes.INTERNAL_SERVER_ERROR))
     }
 }
+
+exports.getprofiledata = async (req, res, next) => {
+
+    try {
+        const uId = req.id
+
+        if (!uId) {
+            return next(new ErrorHandler("Login first", StatusCodes.UNAUTHORIZED))
+        }
+
+        const user = await User.findById(uId);
+
+        if (!user) {
+            return next(new ErrorHandler("User Not Found", StatusCodes.NOT_FOUND))
+        }
+
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            message: "User Find Successfully",
+            data: user
+        })
+
+    } catch (error) {
+        return next(new ErrorHandler(error, StatusCodes.INTERNAL_SERVER_ERROR))
+    }
+}
+
+exports.updateprofile = async (req, res, next) => {
+    try {
+        const { fname, username, email } = req.body;
+        const { userId } = req.params;
+        const profile = req.file;
+        const userType = "user";
+        const fileType = "profile";
+
+        if (!userId) {
+            return next(new ErrorHandler("UserId Req", StatusCodes.BAD_REQUEST));
+        }
+
+        if (!fname || !username || !email) {
+            return next(new ErrorHandler("All Fields are Req", StatusCodes.BAD_REQUEST));
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return next(new ErrorHandler("User Not Found", StatusCodes.NOT_FOUND));
+        }
+
+        const userWithEmail = await User.findOne({ email: email });
+        if (userWithEmail && userWithEmail._id.toString() !== userId) {
+            return next(new ErrorHandler("Email already registered", StatusCodes.UNAUTHORIZED));
+        }
+
+        if (profile) {
+            if (user.profile) {
+                await FilestorageFirabse.deleteFileFromFirebase(user.profile);
+            }
+            const profile_img = await FilestorageFirabse.uploadToFierbase(profile, null, userType, fileType);
+            user.profile = profile_img;
+        }
+
+        user.fname = fname;
+        user.username = username;
+        user.email = email;
+
+        const profileUpdate = await user.save();
+
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            message: "Profile Updated successfully",
+            data: profileUpdate
+        });
+
+    } catch (error) {
+        return next(new ErrorHandler(error, StatusCodes.INTERNAL_SERVER_ERROR));
+    }
+};

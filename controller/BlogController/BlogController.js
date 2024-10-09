@@ -165,7 +165,7 @@ exports.updateBlog = async (req, res, next) => {
 
 
         if (blogimg) {
-            if (blog.blogimg) { // Check if an existing image exists before deleting
+            if (blog.blogimg) {
                 await FilestorageFirebase.deleteFileFromFirebase(blog.blogimg);
             }
             const blog_img = await FilestorageFirebase.uploadToFierbase(blogimg, userId, "userpost", "bloimages"); // Fixed typo in "uploadToFirebase" and "blogimages"
