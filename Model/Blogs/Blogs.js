@@ -24,6 +24,10 @@ const Blogs = new Schema({
         type: String,
         required: true
     },
+    like:{
+        type:[],
+        required:false
+    },
     date: {
         type: Date,
         required: true

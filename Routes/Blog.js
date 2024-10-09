@@ -1,4 +1,4 @@
-const { postblog, getPostBlogs, getAlluserpost, postdelete, updateBlog, getupdateblogs, homePageCategory, blogSerach } = require("../controller/BlogController/BlogController");
+const { postblog, getPostBlogs,LikeCount, getAlluserpost, postdelete, updateBlog, getupdateblogs, homePageCategory, blogSerach,LikeandUnlike } = require("../controller/BlogController/BlogController");
 const express = require("express");
 const { authntication } = require("../middleware/auth");
 const { uploadMulter } = require("../middleware/multerFileStorgae");
@@ -21,6 +21,11 @@ router.get("/user/view/blogs/post/:blogId", authntication, getupdateblogs)
 router.get("/user/category/blog", homePageCategory);
 
 router.get("/user/find/blog", blogSerach)
+
+router.post('/user/blog/like/unlike/:blogId/:userId',authntication,LikeandUnlike)
+
+router.get('/user/blog/likeCounts/:blogId',LikeCount)
+
 
 
 module.exports = router;

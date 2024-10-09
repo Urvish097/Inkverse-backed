@@ -291,3 +291,58 @@ exports.blogSerach = async (req, res, next) => {
         return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
     }
 }
+
+
+exports.LikeandUnlike = async(req,res,next) => {
+    try {
+        const {blogId,userId} = req.params
+
+        const blog = await Blog.findById(blogId)
+        if(!blog){
+            return next(new ErrorHandler("Blog not Found",StatusCodes.NOT_FOUND))
+        }
+
+        const hasLike = blog.like.includes(userId)
+
+        if(hasLike){
+           blog.like.pull(userId)
+        } else {
+           blog.like.push(userId)
+        }
+
+        const like = await blog.save()
+
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            message: "Blog Like Successfully",
+            data: like
+        });
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
+    }
+} 
+
+exports.LikeCount = async(req,res,next) => {
+    try {
+        const {blogId} = req.params
+
+        const blog = await Blog.findById(blogId)
+        if(!blog){
+            return next(new ErrorHandler("Blog not Found",StatusCodes.NOT_FOUND))
+        }
+
+         const LikeCounts = blog.like.length
+        
+
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            message: "Blog LikeCounts Successfully",
+            data: LikeCounts
+        });
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
+    }
+} 
+
