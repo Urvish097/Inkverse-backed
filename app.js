@@ -20,9 +20,11 @@ app.use(express.urlencoded({ extended: false }))
 
 const user = require('./Routes/User');
 const blog = require("./Routes/Blog");
+const admin = require("./Routes/Admin")
 
 app.use(user);
 app.use(blog);
+app.use(admin);
 
 app.use(errorMiddleware)
 mongoose.connect(process.env.MONGODB_URL)
