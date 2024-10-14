@@ -23,11 +23,17 @@ const UserSChema = new Schema({
     type: String,
     required: true
   },
+  status: {
+    type: String,
+    enum: ['Active', 'Pending', 'Block'],
+    default: 'Pending',
+    required: true
+  },
   role: {
     type: String,
     default: "User",
   },
-});
+}, { timestamps: true });
 
 const User = mongoose.model("User", UserSChema);
 

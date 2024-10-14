@@ -43,7 +43,16 @@ exports.postUsersignUp = async (req, res, next) => {
             subject: "Blog SignUp",
             text: "Welcome To Inkverse",
             html: `
-        <h1>Welcome  ${fname}</h1> `,
+        <h1>Welcome  ${fname}</h1> 
+          <h2>Your account has been successfully created, and your profile is currently pending approval by the admin.</h2>
+          <h2>Your profile status will be reviewed and approved within 24 hours. You will receive an email once approved.</h2>
+          <h3>Important Guidelines for Inkverse:</h3>
+          <ul>
+            <li><strong>Original Content:</strong> Ensure the content you post is original or properly credited. Plagiarism will result in content removal and possible account suspension.</li>
+            <li><strong>No Misinformation:</strong> Always share accurate information. Spreading false or misleading content may lead to penalties.</li>
+            <li><strong>User Privacy:</strong> Do not share personal information without consent. Respect the privacy of others.</li>
+            <li><strong>No 18+ Content:</strong> Posting explicit or inappropriate content without proper labels or warnings is prohibited. Accounts violating this rule may be banned.</li>
+          </ul>`,
         })
 
         const profile_picture = await FilestorageFirabse.uploadToFierbase(profile, null, userType, fileType);
