@@ -1,4 +1,4 @@
-const Admin = require('../../model/Admin/Admin')
+const Admin = require('../../Model/Admin/admin')
 const bcrypt = require("bcryptjs");
 const { ErrorHandler } = require('../../middleware/errorHandler')
 const { StatusCodes } = require('http-status-codes')

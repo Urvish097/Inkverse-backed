@@ -122,34 +122,75 @@ exports.AdminUserFind = async (req, res, next) => {
 
 exports.AdminDeleteUser = async (req, res, next) => {
     try {
-
-        const { userId } = req.params
-
+        const { userId } = req.params;
         if (!userId) {
-            return next(new ErrorHandler("UserId Not Found", StatusCodes.NOT_FOUND))
+            return next(new ErrorHandler("UserId Not Found", StatusCodes.NOT_FOUND));
         }
 
-        const user = await User.findById(userId)
-
+        const user = await User.findById(userId);
         if (!user) {
-            return next(new ErrorHandler("User Not Found", StatusCodes.NOT_FOUND))
+            return next(new ErrorHandler("User Not Found", StatusCodes.NOT_FOUND));
         }
 
-        const { profile } = user
-
+        const { profile } = user;
         if (profile) {
-            await FilestorageFirebase.deleteFileFromFirebase(profile)
+            await FilestorageFirebase.deleteFileFromFirebase(profile);
         }
 
-        const userDelete = await User.findByIdAndDelete(userId)
+        const userDelete = await User.findByIdAndDelete(userId);
+
+        const blogs = await Blog.find({ userId: userId });
+
+        if (blogs.length > 0) {
+            for (let blog of blogs) {
+                if (blog.blogimg) {
+                    await FilestorageFirebase.deleteFileFromFirebase(blog.blogimg);
+                }
+
+                if (Array.isArray(blog.additionalimg) && blog.additionalimg.length > 0) {
+                    for (let img of blog.additionalimg) {
+                        await FilestorageFirebase.deleteFileFromFirebase(img);
+                    }
+                }
+            }
+
+            await Blog.deleteMany({ userId: userId });
+        }
 
         return res.status(StatusCodes.OK).json({
             success: true,
-            message: "User Delete Successfully",
-            data: userDelete
+            message: "User and associated blogs deleted successfully",
+            data: userDelete,
         });
 
     } catch (error) {
-        return next(new ErrorHandler(error.message), StatusCodes.INTERNAL_SERVER_ERROR)
+        return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
     }
 };
+
+exports.AdminStatusFilter = async (req, res, next) => {
+    try {
+
+        const status = await User.find()
+        if (!status) {
+            return next(new ErrorHandler("status not found", StatusCodes.NOT_FOUND));
+        }
+
+        let Pending = status.filter(user => user.status === 'Pending');
+        let Active = status.filter(user => user.status === 'Active');
+        let Block = status.filter(user => user.status === 'Block');
+
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            message: "status find Successfully",
+            data: {
+                Pending: Pending,
+                Active: Active,
+                Block: Block
+            }
+        });
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
+    }
+}

@@ -32,24 +32,52 @@ exports.UserStatus = async (req, res, next) => {
             await transpoter.sendMail({
                 from: "darshanchovatiya30@gmail.com",
                 to: userStatus.email,
-                subject: "Account Approved",
+                subject: "Your Inkverse Account Has Been Approved!",
                 html: `
-                  <h1>Mr/Ms : ${userStatus.username}</h1>
-                  <h2>Your Account has been Approved by Admin now you can create BlogPost</h2>
-                  <h2>If you are Login then please Login Again</h2>
+                  <div style="font-family: Arial, sans-serif; color: #333;">
+                      <h1 style="color: #4CAF50;">Dear ${userStatus.username},</h1>
+                      <p>We're excited to inform you that your account has been approved by our admin team!</p>
+                      
+                      <h2 style="color: #4CAF50;">You're all set to start creating blog posts!</h2>
+                      <p>If you're already logged in, please log in again to enjoy full access to all features.</p>
+            
+                      <p>We can't wait to see the amazing content you'll share on <strong>Inkverse</strong>!</p>
+            
+                      <h3 style="color: #4CAF50;">Best regards,</h3>
+                      <p>The Inkverse Team</p>
+                  </div>
                 `,
             });
+
         } else if (status === 'Block') {
             await transpoter.sendMail({
                 from: "darshanchovatiya30@gmail.com",
                 to: userStatus.email,
-                subject: "Account Blocked",
+                subject: "Account Blocked - Violation of Guidelines",
                 html: `
-                  <h1>Mr/Ms : ${userStatus.username}</h1>
-                  <h2>Your Account has been Block by Admin now you can Not create BlogPost</h2>
-                  <h2>We are writing to inform you that some content you recently uploaded to our platform has been flagged as inappropriate. Our community guidelines are in place to ensure a safe and respectful environment for all users, and it appears that the content you uploaded violates the following guideline(s): </h2>
+                  <div style="font-family: Arial, sans-serif; color: #333;">
+                      <h1 style="color: #FF0000;">Dear ${userStatus.username},</h1>
+                      <p>We regret to inform you that your account has been blocked by the admin due to a violation of our community guidelines.</p>
+                      
+                      <h2 style="color: #FF0000;">Account Blocked</h2>
+                      <p>Unfortunately, you will no longer be able to create blog posts or access certain features on <strong>Inkverse</strong>.</p>
+            
+                      <h3>Reason for Block:</h3>
+                      <p>It appears that some content you recently uploaded has been flagged as inappropriate. Our guidelines are in place to maintain a respectful and safe environment for all users, and the content you posted violates the following rule(s):</p>
+            
+                      <ul style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; list-style: none; color: #333;">
+                          <li><strong>🔹 Respectful Communication:</strong> Ensuring that all users feel safe and respected.</li>
+                          <li><strong>🔹 No Explicit Content:</strong> Avoid posting content that is explicit or inappropriate.</li>
+                      </ul>
+            
+                      <p>If you believe this is a mistake, you may contact our support team for further clarification.</p>
+            
+                      <h3 style="color: #FF0000;">Best regards,</h3>
+                      <p>The Inkverse Team</p>
+                  </div>
                 `,
             });
+
         }
 
         return res.status(StatusCodes.OK).json({

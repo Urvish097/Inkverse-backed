@@ -40,20 +40,41 @@ exports.postUsersignUp = async (req, res, next) => {
         await transpoter.sendMail({
             from: "suvagiyaurvish45@gmail.com",
             to: email,
-            subject: "Blog SignUp",
-            text: "Welcome To Inkverse",
+            subject: "Welcome to Inkverse!",
             html: `
-        <h1>Welcome  ${fname}</h1> 
-          <h2>Your account has been successfully created, and your profile is currently pending approval by the admin.</h2>
-          <h2>Your profile status will be reviewed and approved within 24 hours. You will receive an email once approved.</h2>
-          <h3>Important Guidelines for Inkverse:</h3>
-          <ul>
-            <li><strong>Original Content:</strong> Ensure the content you post is original or properly credited. Plagiarism will result in content removal and possible account suspension.</li>
-            <li><strong>No Misinformation:</strong> Always share accurate information. Spreading false or misleading content may lead to penalties.</li>
-            <li><strong>User Privacy:</strong> Do not share personal information without consent. Respect the privacy of others.</li>
-            <li><strong>No 18+ Content:</strong> Posting explicit or inappropriate content without proper labels or warnings is prohibited. Accounts violating this rule may be banned.</li>
-          </ul>`,
-        })
+            <div style="font-family: Arial, sans-serif; color: #333;">
+                <h1 style="color: #4CAF50;">Welcome, ${fname}!</h1>
+                <p>We’re excited to have you join <strong>Inkverse</strong>, a vibrant space for creativity and self-expression.</p>
+                
+                <h2 style="color: #4CAF50;">Your account has been successfully created!</h2>
+                <p>Your profile is currently under review by our team. This process may take up to 24 hours, and you’ll receive an email notification once your profile is approved.</p>
+        
+                <h3 style="color: #4CAF50;">What’s next?</h3>
+                <p>While you wait, here are a few key guidelines to help you get started:</p>
+                
+                <ul style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; list-style: none; color: #333;">
+                    <li style="margin-bottom: 10px;">
+                        <strong>🔹 Original Content:</strong> Ensure that all your posts are original or properly credited. Plagiarism may lead to content removal and possible account suspension.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <strong>🔹 No Misinformation:</strong> Always share accurate and verified information. Misleading content can result in penalties.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <strong>🔹 Respect User Privacy:</strong> Do not share personal details without consent. Privacy violations may lead to restrictions.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <strong>🔹 No Explicit Content:</strong> Posting adult or inappropriate content without proper labels or warnings is prohibited. Violators may face account suspension.
+                    </li>
+                </ul>
+        
+                <p>Thank you for joining Inkverse! We look forward to seeing your creativity thrive.</p>
+        
+                <h3 style="color: #4CAF50;">Best regards,</h3>
+                <p>The Inkverse Team</p>
+            </div>
+            `,
+        });
+
 
         const profile_picture = await FilestorageFirabse.uploadToFierbase(profile, null, userType, fileType);
 

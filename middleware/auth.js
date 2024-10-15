@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { ErrorHandler } = require("./errorHandler");
 const { StatusCodes } = require("http-status-codes");
 const User = require("../Model/User/User");
+const Admin = require("../Model/Admin/admin")
 
 exports.authntication = async (req, res, next) => {
   try {
