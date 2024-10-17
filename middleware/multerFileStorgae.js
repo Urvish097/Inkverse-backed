@@ -24,6 +24,8 @@ const uploadToFierbase = async (file, userId, userType, fileType) => {
             destinationPath = `user/profile/${file.originalname}-${new Date().getTime()}`;
         } else if (userType === 'userpost' && fileType === 'bloimages') {
             destinationPath = `userpost/${userId}/bloimages/${file.originalname}-${new Date().getTime()}`;
+        } else if (userType === 'Advertisement' && fileType === 'AdPoster') {
+            destinationPath = `Advertisement/${userId}/AdPoster/${file.originalname}-${new Date().getTime()}`
         }
 
         const storageRef = firebaseStorage.ref(storage, destinationPath);
@@ -52,7 +54,7 @@ const deleteFileFromFirebase = async (fileName) => {
         await firebaseStorage.deleteObject(storageRef);
     } catch (error) {
         throw error;
-    }  
+    }
 };
 
 module.exports = {
