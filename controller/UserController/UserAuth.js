@@ -113,7 +113,6 @@ exports.postlogin = async (req, res, next) => {
         }
 
         const passcomm = await bcryptjs.compare(password, user.password)
-
         if (!passcomm) {
             return next(new ErrorHandler("Password Not Match", StatusCodes.UNAUTHORIZED))
         }
@@ -123,7 +122,7 @@ exports.postlogin = async (req, res, next) => {
                 email: user.email,
             },
             process.env.JWT_SECRET_KEY,
-            { expiresIn: '365d' });
+            { expiresIn: '3h' });
 
         return res.status(StatusCodes.OK).json({
             message: "USER LOGIN SUCSSEFULYY",
