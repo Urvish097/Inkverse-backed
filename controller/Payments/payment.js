@@ -3,6 +3,8 @@ const { Cashfree } = require('cashfree-pg');
 const { StatusCodes } = require("http-status-codes");
 const { ErrorHandler } = require('../../middleware/errorHandler');
 const Advertisement = require("../../Model/Advertisement/Advertisement");
+const moment = require("moment")
+
 
 Cashfree.XClientId = process.env.CLIENT_ID;
 Cashfree.XClientSecret = process.env.CLIENT_SECRET;
@@ -74,7 +76,11 @@ exports.postverfying = async (req, res, next) => {
             return next(new ErrorHandler("Advertisement not found", StatusCodes.BAD_REQUEST));
         }
 
-        ad.paymentClear = true
+        if (response === "PAID") {
+            ad.paymentClear = true
+        }
+
+        ad.lastTime = moment(ad.createdAt).add(ad.ad_duration, 'days')
         ad.payment = response.data
 
         await ad.save()

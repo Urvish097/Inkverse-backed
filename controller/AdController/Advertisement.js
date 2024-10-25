@@ -79,7 +79,7 @@ exports.postAd = async (req, res, next) => {
     } catch (error) {
         return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
     }
-}
+};
 
 exports.getAd = async (req, res, next) => {
 
@@ -112,7 +112,7 @@ exports.getAd = async (req, res, next) => {
     } catch (error) {
         return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
     }
-}
+};
 
 exports.getadHome = async (req, res, next) => {
     try {
@@ -133,12 +133,18 @@ exports.getadHome = async (req, res, next) => {
     } catch (error) {
         return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
     }
-}
+};
 
 exports.adsfilter = async (req, res, next) => {
     try {
 
-        const Ad = await Advertisement.find()
+        const { userId } = req.params
+
+        if (!userId) {
+            return next(new ErrorHandler("UserId Not Found", StatusCodes.BAD_REQUEST))
+        }
+
+        const Ad = await Advertisement.find({ userId: userId })
 
         if (!Ad) {
             return next(new ErrorHandler("Ad Not Found", StatusCodes.NOT_FOUND))
@@ -159,4 +165,54 @@ exports.adsfilter = async (req, res, next) => {
     } catch (error) {
         return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
     }
-}
+};
+
+exports.allinvoice = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+
+        if (!userId) {
+            return next(new ErrorHandler("UserId Not Found", StatusCodes.BAD_REQUEST));
+        }
+
+        const Invoice = await Advertisement.find({ userId: userId, paymentClear: true });
+
+        if (!Invoice) {
+            return next(new ErrorHandler("No Invoice found", StatusCodes.NOT_FOUND))
+        }
+
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            message: "Invoice Found",
+            data: Invoice
+        });
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
+    }
+};
+
+exports.Invoice = async (req, res, next) => {
+    try {
+
+        const { adId } = req.params
+
+        if (!adId) {
+            next(new ErrorHandler("AdId Not Found", StatusCodes.BAD_REQUEST))
+        }
+
+        const Invoice = await Advertisement.findById(adId).populate("userId")
+
+        if (!Invoice) {
+            next(new ErrorHandler("No Invoice", StatusCodes.NOT_FOUND))
+        }
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            message: "Inovice",
+            data: Invoice
+        })
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, StatusCodes.INTERNAL_SERVER_ERROR));
+    }
+};

@@ -48,6 +48,7 @@ const Ad = new Schema({
         required: true,
         default: 0
     },
+    lastTime: Date,
     role: {
         type: String,
         default: "Advertisement",

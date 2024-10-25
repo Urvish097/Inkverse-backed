@@ -3,6 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
 const { errorMiddleware } = require("./middleware/errorHandler");
+const AdExprie = require("./util/node-corn")
+
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.use(cors(corsOptions));
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
+AdExprie()
+
 const user = require('./Routes/User');
 const blog = require("./Routes/Blog");
 const admin = require("./Routes/Admin")
@@ -27,6 +31,8 @@ app.use(user);
 app.use(blog);
 app.use(admin);
 app.use(Advertisement)
+
+
 
 app.use(errorMiddleware)
 mongoose.connect(process.env.MONGODB_URL)
