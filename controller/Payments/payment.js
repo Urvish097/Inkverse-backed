@@ -66,24 +66,24 @@ exports.postverfying = async (req, res, next) => {
             return next(new ErrorHandler("Order id required", StatusCodes.BAD_REQUEST));
         }
 
-        const response = await Cashfree.PGFetchOrder("2023-08-01", order_id);
-        if (!response) {
-            return next(new ErrorHandler("Response not found", StatusCodes.NOT_FOUND));
-        }
-
         const ad = await Advertisement.findById(adId)
         if (!ad) {
             return next(new ErrorHandler("Advertisement not found", StatusCodes.BAD_REQUEST));
         }
 
-        if (response === "PAID") {
-            ad.paymentClear = true
+
+        const response = await Cashfree.PGFetchOrder("2023-08-01", order_id);
+        if (!response) {
+            return next(new ErrorHandler("Response not found", StatusCodes.NOT_FOUND));
         }
 
-        ad.lastTime = moment(ad.createdAt).add(ad.ad_duration, 'days')
-        ad.payment = response.data
+        if (response.data.order_status === 'PAID') {
+            ad.paymentClear = true
+            ad.lastTime = moment(ad.createdAt).add(ad.ad_duration, 'days')
+            ad.payment = response.data
+            await ad.save()
+        }
 
-        await ad.save()
 
         return res.status(StatusCodes.CREATED).json({
             success: true,
